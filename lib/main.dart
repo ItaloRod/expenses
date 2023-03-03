@@ -31,6 +31,13 @@ class ExpenseApp extends StatelessWidget {
             fontWeight: FontWeight.bold,
             color: Colors.black,
           ),
+          labelLarge: const TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.bold
+          ),
+          titleSmall: const TextStyle(
+            color: Colors.white
+          )
         ),
         appBarTheme: const AppBarTheme(
           titleTextStyle: TextStyle(
@@ -54,19 +61,19 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
 
    final List<Transaction> _transactions = [
-      Transaction(id: 't1', title: 'Novo tênis de corrida', value: 310.76, date: DateTime.now().subtract(const Duration(days: 5))),
-      Transaction(id: 't2', title: 'Conta de Luz', value: 211.30, date: DateTime.now().subtract(const Duration(days: 3))),
-      Transaction(id: 't2', title: 'Conta de Luz', value: 211.30, date: DateTime.now().subtract(const Duration(days: 4))),
-      Transaction(id: 't2', title: 'Conta de Luz', value: 211.30, date: DateTime.now().subtract(const Duration(days: 2))),
-      Transaction(id: 't2', title: 'Conta de Luz', value: 211.30, date: DateTime.now().subtract(const Duration(days: 3))),
-      Transaction(id: 't2', title: 'Conta de Luz', value: 211.30, date: DateTime.now().subtract(const Duration(days: 3))),
-      Transaction(id: 't3', title: 'Novo tênis de corrida', value: 310.76, date: DateTime.now().subtract(const Duration(days: 4))),
-      Transaction(id: 't4', title: 'Conta de Luz', value: 211.30, date: DateTime.now().subtract(const Duration(days: 5)))
+      // Transaction(id: 't1', title: 'Novo tênis de corrida', value: 310.76, date: DateTime.now().subtract(const Duration(days: 5))),
+      // Transaction(id: 't2', title: 'Conta de Luz', value: 211.30, date: DateTime.now().subtract(const Duration(days: 3))),
+      // Transaction(id: 't2', title: 'Conta de Luz', value: 211.30, date: DateTime.now().subtract(const Duration(days: 4))),
+      // Transaction(id: 't2', title: 'Conta de Luz', value: 211.30, date: DateTime.now().subtract(const Duration(days: 2))),
+      // Transaction(id: 't2', title: 'Conta de Luz', value: 211.30, date: DateTime.now().subtract(const Duration(days: 3))),
+      // Transaction(id: 't2', title: 'Conta de Luz', value: 211.30, date: DateTime.now().subtract(const Duration(days: 3))),
+      // Transaction(id: 't3', title: 'Novo tênis de corrida', value: 310.76, date: DateTime.now().subtract(const Duration(days: 4))),
+      // Transaction(id: 't4', title: 'Conta de Luz', value: 211.30, date: DateTime.now().subtract(const Duration(days: 5)))
   ];
 
   _openTransactionFormModal(BuildContext context) {
     showModalBottomSheet(context: context, builder: (_) {
-      return TransactionForm((p0, p1) => _addtransaction(p0, p1));
+      return TransactionForm((text, value, date) => _addTransaction(text, value, date));
     });
   }
   List<Transaction> get _recentTransactions {
@@ -76,17 +83,23 @@ class _MyHomePageState extends State<MyHomePage> {
       ));
     }).toList();
   }
-  _addtransaction(String title, double value) {
+  _addTransaction(String title, double value, DateTime date) {
     final newTransaction = Transaction(
-        id: Random().nextDouble.toString(),
+        id: Random().nextDouble().toString(),
         title: title,
         value: value,
-        date: DateTime.now()
+        date: date
     );
     setState(() {
       _transactions.add(newTransaction);
     });
     Navigator.of(context).pop();
+  }
+
+  _deleteTransaction(String id) {
+    setState(() {
+      _transactions.removeWhere((tr) => tr.id == id);
+    });
   }
 
   @override
@@ -104,8 +117,8 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
-           Chart(_recentTransactions),
-            TransactionList(_transactions)
+            Chart(_recentTransactions),
+            TransactionList(_transactions, _deleteTransaction)
           ],
         ),
       ),
