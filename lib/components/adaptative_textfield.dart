@@ -21,19 +21,17 @@ class AdaptativeTextField extends StatelessWidget {
   Widget build(BuildContext context) {
     return !Platform.isAndroid
         ? Padding(
-          padding: const EdgeInsets.symmetric(vertical: 8.0),
-          child: CupertinoTextField(
+            padding: const EdgeInsets.symmetric(vertical: 8.0),
+            child: CupertinoTextField(
               controller: controller,
               placeholder: labelText,
               keyboardType: keyboardType,
               onSubmitted: onSubmitted,
             ),
-        )
+          )
         : TextField(
             controller: controller,
-            decoration: InputDecoration(
-              labelText: labelText
-            ),
+            decoration: InputDecoration(labelText: labelText),
             onSubmitted: onSubmitted,
             keyboardType: keyboardType,
           );
